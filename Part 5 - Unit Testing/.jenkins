@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+    
+    environment {
+	    PROJECT_NAME = "ECommerce Application"
+		REPO_PATH = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\CodeGym"
+		PYTHON_PATH = "F:\\python\\python.exe"
+		PYTEST_PATH = "F:\\python\\Scripts\\pytest.exe"
+		SELENIUM_PATH = "E:\\12)DevOps\\SELENIUM\\Testing\\runAllTestSuites.bat"
+     }
+    
+    stages {
+        stage('Stage 1: Cloning Repository...') {
+            steps {
+                echo "Project Name: ${env.PROJECT_NAME}"
+                ws("${env.REPO_PATH}") {
+                    git branch: 'main', credentialsId: '9e9e6add-7a7b-4743-a594-6365ee40d771', url: 'https://github.com/Kedarsdeo75/CodeGym.git'
+                }
+            }
+        }
+        stage('Stage 2: Running Unit TestCases...') {
+            steps {
+                dir("${env.REPO_PATH}") {
+                    catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                        bat "${env.PYTEST_PATH}"
+                    }
+                }
+            }
+        }
+        stage('Stage 3: Run SELENIUM Web App TestCases') {
+            steps {
+                echo 'Running Selenium TestCases...'
+                dir("${env.REPO_PATH}") {
+                    catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                        bat "${env.PYTEST_PATH}" pytestsample.py
+                    }
+                }
+            }
+        }
+		stage('Stage 4: Build Docker Image') {
+            steps {
+               echo 'Building Docker Image...'
+            }
+        }
+    }
+}

@@ -1,0 +1,1 @@
+curl --location "http://127.0.0.1:5000/add_products" --header "Content-Type: application/json" --data "[{"prod_id": 5, "name": "Product 5", "price": 40.0}]"

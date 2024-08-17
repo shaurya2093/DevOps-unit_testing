@@ -1,0 +1,2 @@
+Timestamp,Process Name,PID,CPU Utilization (%),RAM Consumption (MB),Sent MB,Received MB,Disk Utilization (%)
+2023-12-21 16:59:21,chrome.exe,1540,0.0,72.343552,87.770906,557.335555,15.3
