@@ -1,3 +1,6 @@
+##DEVOPS 
+#CORRESPONDING TO VERSION CONTROL
+
 Introduction
 DevOps is a set of practices that combine software development (Dev) and IT operations (Ops) to shorten the software development lifecycle while delivering features, fixes, and updates frequently in close alignment with business objectives. The primary goal of DevOps is to bridge the gap between development and operations teams, ensuring smooth and efficient software delivery with high quality.
 
