@@ -31,7 +31,7 @@ Continuous Feedback: Feedback loops are established to ensure that any issues or
 
 # Tools in DevOps
 Version Control: Git, GitHub, GitLab
-CI/CD: Jenkins, CircleCI, GitHub Actions
+CI/CD: Jenkins, CircleCI, GitHub
 Configuration Management: Ansible, Puppet, Chef
 Containerization: Docker, Kubernetes
 Infrastructure as Code: Terraform, CloudFormation
