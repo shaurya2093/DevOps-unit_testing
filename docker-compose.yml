@@ -17,5 +17,16 @@ services:
     volumes:
       - mongo-data:/data/db  # This persists MongoDB data even when the container is stopped
 
+  backend:
+    build:
+      context: ./frontend  # Dockerfile for your backend service
+    ports:
+      - "5000:5000"  # Map backend's internal port 5000 to port 5000 on your machine
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URL: mongodb+srv://guptashaurya507:shaurya@contact-devops.8u7nm.mongodb.net/  # MongoDB connection URL
+ 
+
 volumes:
   mongo-data:
