@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./Frontend  # This points to the frontend directory with your Dockerfile
+    ports:
+      - "8083:83"  # This maps port 8080 on your local machine to port 80 inside the container
+    depends_on:
+      - mongo  # This ensures that MongoDB starts before the frontend
+
+  mongo:
+    image: mongo:4.4  # This pulls the official MongoDB image from Docker Hub
+    container_name: mongodb  # This gives a name to the MongoDB container
+    ports:
+      - "27017:27017"  # Maps the MongoDB port to your local machine, so you can connect to it
+    volumes:
+      - mongo-data:/data/db  # This persists MongoDB data even when the container is stopped
+
+volumes:
+  mongo-data:
