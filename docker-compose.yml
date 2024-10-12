@@ -8,7 +8,13 @@ services:
       - "8083:80"  # Map host port 8080 to container port 80
     depends_on:
       - backend  # Ensure backend starts before frontend
-
+  mongo:
+    image: mongo:4.4  # Use the official MongoDB image
+    container_name: mongodb
+    ports:
+      - "27017:27017"  # Expose MongoDB on the default port
+    volumes:
+      - mongo-data:/data/db  # Persist MongoDB datav
   backend:
     build:
       context: ./frontend  # Directory containing your backend Dockerfile
@@ -19,13 +25,7 @@ services:
     depends_on:
       - mongo  # Ensure MongoDB starts before the backend
 
-  mongo:
-    image: mongo:4.4  # Use the official MongoDB image
-    container_name: mongodb
-    ports:
-      - "27017:27017"  # Expose MongoDB on the default port
-    volumes:
-      - mongo-data:/data/db  # Persist MongoDB data
+
 
 volumes:
   mongo-data:
