@@ -10,6 +10,8 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 RUN npm install cors
+RUN npm install express
+RUN npm install mongoose
 # Copy the rest of your application files
 COPY . .
 
