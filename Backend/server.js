@@ -2,20 +2,24 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
-const cors = require('cors');
+
 
 const app = express();
 
 // Middleware setup
-app.use(cors());
+const cors = require('cors');
+app.use(cors({
+    origin: 'http://127.0.0.1:8082' // Allow requests from your frontend
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(__dirname));
+// app.use(express.static(__dirname));
 
-const PORT = process.env.PORT || 8081;
+const PORT = process.env.PORT || 3000;
 
 // Connect to MongoDB (ensure to use your actual MongoDB URI)
-const MONGODB_URI = 'mongodb+srv://guptashaurya507:shaurya@contact.3ioln.mongodb.net/';
+// const MONGODB_URI = 'mongodb+srv://guptashaurya507:shaurya@contact.3ioln.mongodb.net/';
+const MONGODB_URI = 'mongodb+srv://guptashaurya507:shaurya@contact-devops.8u7nm.mongodb.net/contact1'
 mongoose.connect(MONGODB_URI)
     .then(() => {
         console.log('Connected to MongoDB');
@@ -38,13 +42,15 @@ const contactSchema = new mongoose.Schema({
 
 // Create a model for Contact
 const Contact = mongoose.model('Contact', contactSchema);
+
 app.get('/contact2', (req, res) => {
     res.send('This is the contact page');
 });
+
 // Handle the form submission
 app.post('/contact', async (req, res) => {
     const { name, email, subject, message } = req.body;
-
+    console.log("Received data:", req.body);
     const newContact = new Contact({
         name: name,
         email: email,
