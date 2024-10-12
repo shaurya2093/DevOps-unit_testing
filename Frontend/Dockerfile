@@ -5,4 +5,4 @@ FROM nginx:alpine
 COPY ./ /usr/share/nginx/html
 
 # Expose port 80 to make the website accessible
-EXPOSE 83
+EXPOSE 80

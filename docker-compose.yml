@@ -3,30 +3,29 @@ version: '3.8'
 services:
   frontend:
     build:
-      context: ./Frontend  # This points to the frontend directory with your Dockerfile
+      context: ./frontend  # Adjust this if your Dockerfile is in a different location
     ports:
-      - "8083:83"  # This maps port 8080 on your local machine to port 80 inside the container
+      - "8083:80"  # Map host port 8080 to container port 80
     depends_on:
-      - mongo  # This ensures that MongoDB starts before the frontend
-
-  mongo:
-    image: mongo:4.4  # This pulls the official MongoDB image from Docker Hub
-    container_name: mongodb  # This gives a name to the MongoDB container
-    ports:
-      - "27017:27017"  # Maps the MongoDB port to your local machine, so you can connect to it
-    volumes:
-      - mongo-data:/data/db  # This persists MongoDB data even when the container is stopped
+      - backend  # Ensure backend starts before frontend
 
   backend:
     build:
-      context: ./frontend  # Dockerfile for your backend service
-    ports:
-      - "5000:5000"  # Map backend's internal port 5000 to port 5000 on your machine
-    depends_on:
-      - mongo
+      context: ./frontend  # Directory containing your backend Dockerfile
     environment:
-      MONGO_URL: mongodb+srv://guptashaurya507:shaurya@contact-devops.8u7nm.mongodb.net/  # MongoDB connection URL
- 
+      - MONGO_URI=mongodb://mongo:27017/mydatabase  # MongoDB connection string
+    ports:
+      - "3000:3000"  # Expose backend service on port 3000
+    depends_on:
+      - mongo  # Ensure MongoDB starts before the backend
+
+  mongo:
+    image: mongo:4.4  # Use the official MongoDB image
+    container_name: mongodb
+    ports:
+      - "27017:27017"  # Expose MongoDB on the default port
+    volumes:
+      - mongo-data:/data/db  # Persist MongoDB data
 
 volumes:
   mongo-data:
