@@ -5,7 +5,7 @@ services:
     build:
       context: ./frontend  # Adjust this if your Dockerfile is in a different location
     ports:
-      - "8083:80"  # Map host port 8080 to container port 80
+      - "8081:80"  # Map host port 8080 to container port 80
     depends_on:
       - backend  # Ensure backend starts before frontend
   mongo:
@@ -17,9 +17,9 @@ services:
       - mongo-data:/data/db  # Persist MongoDB datav
   backend:
     build:
-      context: ./frontend  # Directory containing your backend Dockerfile
+      context: ./backend  # Directory containing your backend Dockerfile
     environment:
-      - MONGO_URI=mongodb://mongo:27017/mydatabase  # MongoDB connection string
+      - MONGO_URI=mongodb://mongo:27017/contact1  # MongoDB connection string
     ports:
       - "3000:3000"  # Expose backend service on port 3000
     depends_on:
