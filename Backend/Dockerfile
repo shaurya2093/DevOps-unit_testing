@@ -1,22 +1,20 @@
-# Use the official Node.js image
-FROM node:14
+# Use Node.js version 16 or higher
+FROM node:16
 
-# Set the working directory
+# Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json
+# Copy package.json and package-lock.json into the container's working directory
 COPY package*.json ./
 
-# Install dependencies
+# Install the dependencies
 RUN npm install
-RUN npm install cors
-RUN npm install express
-RUN npm install mongoose
-# Copy the rest of your application files
+
+# Copy the rest of your application files into the container
 COPY . .
 
 # Expose the port your app runs on
 EXPOSE 3000
 
-# Command to run your app
-CMD ["node", "server.js"]  # Replace "server.js" with your main entry file
+# Start the application
+CMD ["node", "server.js"]
