@@ -41,11 +41,12 @@ stage('Test') {
         script {
             // Example test for backend
             bat '''
-                docker run --rm %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG% cmd /c "npm install && npm test"
+                docker run --rm %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG% npm install && docker run --rm %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG% npm test
             '''
         }
     }
 }
+
 
 
 
