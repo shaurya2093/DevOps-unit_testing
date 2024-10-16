@@ -36,27 +36,32 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                script {
-                    // Example test for backend (can be expanded with real tests)
-                    sh 'docker run ${DOCKER_BACKEND_IMAGE}:${DOCKER_TAG} npm test'
-                }
-            }
+stage('Test') {
+    steps {
+        script {
+            // Example test for backend (can be expanded with real tests)
+            bat 'docker run %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG% npm test'
         }
+    }
+}
 
-        stage('Push Docker Images') {
-            steps {
-                script {
-                    // Push Docker images to Docker Hub
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
-                        sh 'docker push ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG}'
-                        sh 'docker push ${DOCKER_BACKEND_IMAGE}:${DOCKER_TAG}'
-                    }
-                }
+
+stage('Push Docker Images') {
+    steps {
+        script {
+            // Push Docker images to Docker Hub
+            withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                // Use bat command to log in to Docker Hub
+                bat 'echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin'
+                
+                // Push frontend and backend images
+                bat 'docker push %DOCKER_FRONTEND_IMAGE%:%DOCKER_TAG%'
+                bat 'docker push %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG%'
             }
         }
+    }
+}
+
 
         stage('Deploy') {
             steps {
