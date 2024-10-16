@@ -12,7 +12,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Clone the repository from GitHub
-                git branch: 'main', url: "${REPO_URL}"
+                git branch: 'main', url: "https://github.com/shaurya2093/DevOps-unit_testing.git"
             }
         }
 
