@@ -17,13 +17,14 @@ pipeline {
         }
 
         stage('Build Frontend') {
-            steps {
-                script {
-                    // Build frontend Docker image
-                    sh 'docker build -t ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG} ./frontend'
-                }
-            }
+    steps {
+        script {
+            // Remove nohup, use a plain docker build command instead
+            sh 'docker build -t ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG} ./frontend'
         }
+    }
+}
+
 
         stage('Build Backend') {
             steps {
