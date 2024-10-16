@@ -17,23 +17,31 @@ pipeline {
         }
 
         stage('Build Frontend') {
-    steps {
-        script {
-            // Use 'bat' command for Windows instead of 'sh'
-            bat 'docker build -t %DOCKER_FRONTEND_IMAGE%:%DOCKER_TAG% ./frontend'
+            steps {
+                script {
+                    // Use 'bat' command for Windows instead of 'sh'
+                    bat "docker build -t ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG} ./frontend"
+                }
+            }
         }
-    }
-}
-
-
 
         stage('Build Backend') {
             steps {
                 script {
                     // Build backend Docker image
-                    bat 'docker build -t %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG% ./backend'
+                    bat "docker build -t ${DOCKER_BACKEND_IMAGE}:${DOCKER_TAG} ./backend"
                 }
             }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    // Example test for backend
+                    bat "docker run --rm ${DOCKER_BACKEND_IMAGE}:${DOCKER_TAG} cmd /c \"npm install && npm test\""
+                }
+            }
+        }
 
         stage('Push Docker Images') {
             steps {
@@ -41,25 +49,25 @@ pipeline {
                     // Push Docker images to Docker Hub
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         // Use bat command to log in to Docker Hub
-                        bat 'echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin'
+                        bat "echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin"
                         
                         // Push frontend and backend images
-                        bat 'docker push %DOCKER_FRONTEND_IMAGE%:%DOCKER_TAG%'
-                        bat 'docker push %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG%'
+                        bat "docker push ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG}"
+                        bat "docker push ${DOCKER_BACKEND_IMAGE}:${DOCKER_TAG}"
                     }
                 }
             }
         }
 
-
         stage('Deploy') {
             steps {
                 script {
                     // Run the Docker Compose file to deploy services
-                    sh 'docker-compose -f docker-compose.yml up -d'
+                    bat "docker-compose -f docker-compose.yml up -d"
                 }
             }
         }
+    }
 
     post {
         success {
