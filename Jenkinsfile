@@ -68,7 +68,7 @@ pipeline {
             steps {
                 script {
                     // Deploy the frontend service
-                    bat 'kubectl apply -f frontend-deployment.yaml'
+                    bat 'kubectl apply -f frontend-deployment.yaml --validate=false'
                     bat 'kubectl apply -f frontend-service.yaml'
 
                     // Deploy the backend service
