@@ -25,16 +25,6 @@ pipeline {
         }
     
 
-        stage('Deploy') {
-            steps {
-                script {
-                    // Example command to run the container on your server
-                    sh 'docker run -d -p 8081:80'
-                }
-            }
-        }
-    }
-
     post {
         success {
             echo 'Pipeline completed successfully!'
