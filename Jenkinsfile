@@ -41,9 +41,9 @@ pipeline {
             // Log the username for debugging (remove/comment out in production)
             echo "Logging in with user: %DOCKER_USERNAME%"
             
-            withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+            withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USERNAME')]) {
                 // Login to Docker Hub
-                bat "echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin"
+                bat "echo saposh2013 | docker login -u %DOCKER_USERNAME% --password-stdin"
                 
                 // Push frontend and backend images
                 bat "docker push %DOCKER_FRONTEND_IMAGE%:%DOCKER_TAG%"
