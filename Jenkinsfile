@@ -19,7 +19,7 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 script {
-                    // Use 'bat' command for Windows instead of 'sh'
+                    // Build frontend Docker image
                     bat "docker build -t ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG} ./frontend"
                 }
             }
@@ -34,15 +34,12 @@ pipeline {
             }
         }
 
-
         stage('Login to DockerHub') {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
                         // Login to Docker Hub
-                        bat '''
-                        docker login -u %DOCKERHUB_USER% -p %DOCKERHUB_PASSWORD%
-                        '''
+                        bat "docker login -u %DOCKERHUB_USER% -p %DOCKERHUB_PASSWORD%"
                     }
                 }
             }
@@ -52,8 +49,8 @@ pipeline {
             steps {
                 script {
                     // Push frontend and backend images to Docker Hub
-                    bat 'docker push %DOCKER_FRONTEND_IMAGE%:%DOCKER_TAG%'
-                    bat 'docker push %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG%'
+                    bat "docker push ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG}"
+                    bat "docker push ${DOCKER_BACKEND_IMAGE}:${DOCKER_TAG}"
                 }
             }
         }
@@ -67,20 +64,16 @@ pipeline {
             }
         }
 
-        pipeline {
-    agent any
-
-    stages {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
                     // Deploy the frontend service
-                    sh 'kubectl apply -f frontend-deployment.yaml'
-                    sh 'kubectl apply -f frontend-service.yaml'
+                    bat 'kubectl apply -f frontend-deployment.yaml'
+                    bat 'kubectl apply -f frontend-service.yaml'
 
                     // Deploy the backend service
-                    sh 'kubectl apply -f backend-deployment.yaml'
-                    sh 'kubectl apply -f backend-service.yaml'
+                    bat 'kubectl apply -f backend-deployment.yaml'
+                    bat 'kubectl apply -f backend-service.yaml'
                 }
             }
         }
@@ -92,18 +85,16 @@ pipeline {
                     sleep 30
                     
                     // Get the external IP of the frontend service
-                    def frontendIp = sh(script: "kubectl get services frontend-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'", returnStdout: true).trim()
+                    def frontendIp = bat(script: "kubectl get services frontend-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'", returnStdout: true).trim()
                     echo "Frontend Service External IP: ${frontendIp}"
                     
                     // Get the external IP of the backend service
-                    def backendIp = sh(script: "kubectl get services backend-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'", returnStdout: true).trim()
+                    def backendIp = bat(script: "kubectl get services backend-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'", returnStdout: true).trim()
                     echo "Backend Service External IP: ${backendIp}"
                 }
             }
         }
     }
-}
-
 
     post {
         success {
@@ -113,5 +104,4 @@ pipeline {
             echo 'Pipeline failed.'
         }
     }
-}
 }
