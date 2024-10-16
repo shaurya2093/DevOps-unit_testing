@@ -39,11 +39,14 @@ pipeline {
 stage('Test') {
     steps {
         script {
-            // Example test for backend (can be expanded with real tests)
-            bat 'docker run %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG% npm test'
+            // Example test for backend
+            bat '''
+                docker run --rm %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG% cmd /c "npm install && npm test"
+            '''
         }
     }
 }
+
 
 
 stage('Push Docker Images') {
