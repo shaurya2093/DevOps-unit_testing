@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     // Build frontend Docker image
-                    sh 'docker build -t ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG} ./frontend'
+                    bat 'docker build -t ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG} ./frontend'
                 }
             }
         }
@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     // Build backend Docker image
-                    sh 'docker build -t ${DOCKER_BACKEND_IMAGE}:${DOCKER_TAG} ./backend'
+                    bat 'docker build -t ${DOCKER_BACKEND_IMAGE}:${DOCKER_TAG} ./backend'
                 }
             }
         }
