@@ -44,8 +44,7 @@ pipeline {
                         def password = "${DOCKER_PASSWORD}"
                         // Try logging in using the password variable
                         echo "Attempting to log in..."
-                         bat "cmd /c echo ${password} | docker login -u ${DOCKER_USERNAME} --password-stdin"
-                        
+                        bat "docker login -u %DOCKER_USERNAME%"
                         // Check login success
                         if (currentBuild.result == null) {
                             echo "Login succeeded!"
