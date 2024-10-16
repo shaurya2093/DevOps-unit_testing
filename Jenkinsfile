@@ -36,22 +36,30 @@ pipeline {
 
 
         stage('Push Docker Images') {
-    steps {
-        script {
-            withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                // Debugging: echo username
-                echo "Logging in as user: ${DOCKER_USERNAME}"
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        // Debugging: echo username
+                        echo "Logging in as user: ${DOCKER_USERNAME}"
 
-                // Use bat command to log in to Docker Hub
-                bat 'echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin'
-                
-                // Push frontend and backend images
-                bat 'docker push %DOCKER_FRONTEND_IMAGE%:%DOCKER_TAG%'
-                bat 'docker push %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG%'
+                        // Try logging in using the password variable
+                        echo "Attempting to log in..."
+                        bat 'echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin'
+                        
+                        // Check login success
+                        if (currentBuild.result == null) {
+                            echo "Login succeeded!"
+                            // Push images
+                            bat 'docker push %DOCKER_FRONTEND_IMAGE%:%DOCKER_TAG%'
+                            bat 'docker push %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG%'
+                        } else {
+                            echo "Login failed."
+                        }
+                    }
+                }
             }
-        }
-    }
 }
+
 
 
         stage('Deploy') {
