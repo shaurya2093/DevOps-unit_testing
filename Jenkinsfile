@@ -1,10 +1,10 @@
 pipeline {
     agent any
-    
+
     environment {
         REPO_URL = 'https://github.com/shaurya2093/DevOps-unit_testing.git'  // Your GitHub repository URL
-        DOCKER_FRONTEND_IMAGE = 'Shaurya2093/frontend-app'  // Docker image for frontend
-        DOCKER_BACKEND_IMAGE = 'Shaurya2093/backend-app'  // Docker image for backend
+        DOCKER_FRONTEND_IMAGE = 'shaurya2093/frontend-app'  // Docker image for frontend
+        DOCKER_BACKEND_IMAGE = 'shaurya2093/backend-app'  // Docker image for backend
         DOCKER_TAG = 'latest'
     }
 
@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     // Build frontend Docker image
-                    bat 'docker build -t ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG} ./frontend'
+                    sh 'docker build -t ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG} ./frontend'
                 }
             }
         }
@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     // Build backend Docker image
-                    bat 'docker build -t ${DOCKER_BACKEND_IMAGE}:${DOCKER_TAG} ./backend'
+                    sh 'docker build -t ${DOCKER_BACKEND_IMAGE}:${DOCKER_TAG} ./backend'
                 }
             }
         }
