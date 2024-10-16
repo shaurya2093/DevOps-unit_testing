@@ -16,7 +16,7 @@ spec:
       - name: frontend
         image: shaurya2093/frontend-app:latest
         ports:
-        - containerPort: 8080
+        - containerPort: 8080  # This is correct
 ---
 apiVersion: v1
 kind: Service
@@ -26,6 +26,6 @@ spec:
   type: LoadBalancer
   ports:
   - port: 80
-    targetPort: 8081
+    targetPort: 8080  # Change this to 8080 to match containerPort
   selector:
     app: frontend
