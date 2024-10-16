@@ -19,11 +19,12 @@ pipeline {
         stage('Build Frontend') {
     steps {
         script {
-            // Remove nohup, use a plain docker build command instead
-            bat 'docker build -t ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG} ./frontend'
+            // Use 'bat' command for Windows instead of 'sh'
+            bat 'docker build -t %DOCKER_FRONTEND_IMAGE%:%DOCKER_TAG% ./frontend'
         }
     }
 }
+
 
 
         stage('Build Backend') {
