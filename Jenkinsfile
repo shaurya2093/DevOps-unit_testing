@@ -20,7 +20,7 @@ pipeline {
     steps {
         script {
             // Remove nohup, use a plain docker build command instead
-            sh 'docker build -t ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG} ./frontend'
+            bat 'docker build -t ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG} ./frontend'
         }
     }
 }
