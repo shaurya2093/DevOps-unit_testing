@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         REPO_URL = 'https://github.com/shaurya2093/DevOps-unit_testing.git'  // Your GitHub repository URL
-        DOCKER_FRONTEND_IMAGE = 'tanaya0222/frontend-app'  // Docker image for frontend
-        DOCKER_BACKEND_IMAGE = 'tanaya0222/backend-app'  // Docker image for backend
+        DOCKER_FRONTEND_IMAGE = 'shaurya2093/frontend-app'  // Docker image for frontend
+        DOCKER_BACKEND_IMAGE = 'shaurya2093/backend-app'  // Docker image for backend
         DOCKER_TAG = 'latest'
     }
 
@@ -35,27 +35,37 @@ pipeline {
         }
 
 
-        stage('Push Docker Images') {
-    steps {
-        script {
-            // Log the username for debugging (remove/comment out in production)
-            echo "Logging in with user: %DOCKER_USERNAME%"
-            
-            withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                // Login to Docker Hub
-                bat "echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin"
-                
-                // Push frontend and backend images
-                bat "docker push %DOCKER_FRONTEND_IMAGE%:%DOCKER_TAG%"
-                bat "docker push %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG%"
+        stage('Login to DockerHub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'Dockerhub-creds', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                        // Login to Docker Hub
+                        bat '''
+                        docker login -u %DOCKERHUB_USER% -p %DOCKERHUB_PASSWORD%
+                        '''
+                    }
+                }
             }
         }
-    }
-}
 
+        stage('Push Docker Images to DockerHub') {
+            steps {
+                script {
+                    // Push frontend and backend images to Docker Hub
+                    bat 'docker push %DOCKER_FRONTEND_IMAGE%:%DOCKER_TAG%'
+                    bat 'docker push %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG%'
+                }
+            }
+        }
 
-
-
+        stage('Logout from DockerHub') {
+            steps {
+                script {
+                    // Logout from Docker Hub
+                    bat 'docker logout'
+                }
+            }
+        }
 
         stage('Deploy') {
             steps {
