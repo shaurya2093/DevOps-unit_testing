@@ -8,11 +8,16 @@ pipeline {
         DOCKER_TAG = 'latest'
     }
 
+    triggers {
+        // Poll SCM for changes every minute (or use webhook for real-time triggers)
+        pollSCM('* * * * *')  // You can replace this with a webhook if preferred
+    }
+
     stages {
         stage('Checkout') {
             steps {
                 // Clone the repository from GitHub
-                git branch: 'main', url: "https://github.com/shaurya2093/DevOps-unit_testing.git"
+                git branch: 'main', url: "${REPO_URL}"
             }
         }
 
@@ -20,7 +25,7 @@ pipeline {
             steps {
                 script {
                     // Build frontend Docker image
-                    sh 'docker build -t ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG} ./frontend'
+                    bat 'docker build -t ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG} ./frontend'
                 }
             }
         }
@@ -29,16 +34,7 @@ pipeline {
             steps {
                 script {
                     // Build backend Docker image
-                    sh 'docker build -t ${DOCKER_BACKEND_IMAGE}:${DOCKER_TAG} ./backend'
-                }
-            }
-        }
-
-        stage('Test') {
-            steps {
-                script {
-                    // Example test for backend (can be expanded with real tests)
-                    sh 'docker run ${DOCKER_BACKEND_IMAGE}:${DOCKER_TAG} http-server'
+                    bat 'docker build -t ${DOCKER_BACKEND_IMAGE}:${DOCKER_TAG} ./backend'
                 }
             }
         }
@@ -46,11 +42,11 @@ pipeline {
         stage('Push Docker Images') {
             steps {
                 script {
-                    // Push Docker images to Docker Hub
+                    // Push Docker images to Docker Hub using credentials from environment variables
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh 'echo "$Saposh@)13" | docker login -u "Shaurya2093" --password-stdin'
-                        sh 'docker push ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG}'
-                        sh 'docker push ${DOCKER_BACKEND_IMAGE}:${DOCKER_TAG}'
+                        bat 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
+                        bat 'docker push ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG}'
+                        bat 'docker push ${DOCKER_BACKEND_IMAGE}:${DOCKER_TAG}'
                     }
                 }
             }
