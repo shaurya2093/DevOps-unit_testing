@@ -3,8 +3,8 @@ pipeline {
     
     environment {
         REPO_URL = 'https://github.com/shaurya2093/DevOps-unit_testing.git'  // Your GitHub repository URL
-        DOCKER_FRONTEND_IMAGE = 'shaurya/frontend-app'  // Docker image for frontend
-        DOCKER_BACKEND_IMAGE = 'shaurya/backend-app'  // Docker image for backend
+        DOCKER_FRONTEND_IMAGE = 'Shaurya2093/frontend-app'  // Docker image for frontend
+        DOCKER_BACKEND_IMAGE = 'Shaurya2093/backend-app'  // Docker image for backend
         DOCKER_TAG = 'latest'
     }
 
