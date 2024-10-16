@@ -38,7 +38,7 @@ pipeline {
         stage('Push Docker Images') {
     steps {
         script {
-            withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+            withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                 // Debugging: echo username
                 echo "Logging in as user: ${DOCKER_USERNAME}"
 
