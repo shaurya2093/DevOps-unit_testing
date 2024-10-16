@@ -10,7 +10,7 @@ pipeline {
 
     triggers {
         // Poll SCM for changes every minute (or use webhook for real-time triggers)
-        pollSCM('* * * * *')  // You can replace this with a webhook if preferred
+        pollSCM('https://d813-2409-40c2-1008-ae8c-5102-1ce3-9d14-d3e2.ngrok-free.app')  // You can replace this with a webhook if preferred
     }
 
     stages {
@@ -24,8 +24,8 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 script {
-                    // Build frontend Docker image
-                    bat 'docker build -t ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG} ./frontend'
+                    // Build frontend Docker image (Windows format for bat)
+                    bat 'docker build -t %DOCKER_FRONTEND_IMAGE%:%DOCKER_TAG% ./frontend'
                 }
             }
         }
@@ -33,8 +33,8 @@ pipeline {
         stage('Build Backend') {
             steps {
                 script {
-                    // Build backend Docker image
-                    bat 'docker build -t ${DOCKER_BACKEND_IMAGE}:${DOCKER_TAG} ./backend'
+                    // Build backend Docker image (Windows format for bat)
+                    bat 'docker build -t %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG% ./backend'
                 }
             }
         }
@@ -44,9 +44,9 @@ pipeline {
                 script {
                     // Push Docker images to Docker Hub using credentials from environment variables
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        bat 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
-                        bat 'docker push ${DOCKER_FRONTEND_IMAGE}:${DOCKER_TAG}'
-                        bat 'docker push ${DOCKER_BACKEND_IMAGE}:${DOCKER_TAG}'
+                        bat 'echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin'
+                        bat 'docker push %DOCKER_FRONTEND_IMAGE%:%DOCKER_TAG%'
+                        bat 'docker push %DOCKER_BACKEND_IMAGE%:%DOCKER_TAG%'
                     }
                 }
             }
@@ -56,7 +56,7 @@ pipeline {
             steps {
                 script {
                     // Run the Docker Compose file to deploy services
-                    sh 'docker-compose -f docker-compose.yml up -d'
+                    bat 'docker-compose -f docker-compose.yml up -d'
                 }
             }
         }
