@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         REPO_URL = 'https://github.com/shaurya2093/DevOps-unit_testing.git' // Update with your GitHub repository
-        DOCKER_IMAGE_NAME = 'shaurya/backend-app'  // Your Docker Hub image name
+        // DOCKER_IMAGE_NAME = 'shaurya/backend-app'  // Your Docker Hub image name
         DOCKER_TAG = 'latest'  // Change to version as needed
     }
 
