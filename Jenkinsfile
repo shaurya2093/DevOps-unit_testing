@@ -16,17 +16,17 @@ pipeline {
             }
         }
 
-    stage('Run Selenium Tests') {
+        stage('Run Selenium Tests') {
             steps {
                 script {
-                    // Run Selenium test cases using pytest
-                    // Ensure Python and required libraries (e.g., selenium, pytest) are installed
+                    // Install dependencies and run Selenium tests
+                    bat 'cd Testcases'
                     bat 'pip install -r requirements.txt'  // Install dependencies
                     bat 'pytest --maxfail=1 --disable-warnings'  // Run the tests using pytest
                 }
             }
         }
-    }
+
         stage('Build Frontend') {
             steps {
                 script {
@@ -115,4 +115,4 @@ pipeline {
             echo 'Pipeline failed.'
         }
     }
-
+}
