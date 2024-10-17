@@ -63,52 +63,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Terraform Init') {
-    steps {
-        script {
-            // Set Terraform working directory
-            dir('path/to/your/terraform/files') {  // Adjust the path as necessary
-                // Initialize Terraform
-                bat 'terraform init'
-
-                // Validate the Terraform files
-                bat 'terraform validate'
-
-                // Plan the deployment
-                bat 'terraform plan'
-            }
-        }
-    }
-
-
-
-        stage('Terraform Plan') {
-            steps {
-                script {
-                    // Run Terraform plan to show the execution plan
-                    sh 'terraform plan -out=plan.out'
-                }
-            }
-        }
-
-        stage('Terraform Apply') {
-            steps {
-                script {
-                    // Apply the Terraform plan
-                    sh 'terraform apply -auto-approve plan.out'
-                }
-            }
-        }
-
-        stage('Verify Deployment') {
-            steps {
-                script {
-                    // Verify resources like EKS cluster or services deployed properly
-                    sh 'kubectl get svc'
-                }
-            }
-        }
     }
 
     post {
