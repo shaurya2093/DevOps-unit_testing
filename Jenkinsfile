@@ -65,13 +65,23 @@ pipeline {
         }
 
         stage('Terraform Init') {
-            steps {
-                script {
-                    // Initialize Terraform in the working directory
-                    sh 'terraform init'
-                }
+    steps {
+        script {
+            // Set Terraform working directory
+            dir('path/to/your/terraform/files') {  // Adjust the path as necessary
+                // Initialize Terraform
+                bat 'terraform init'
+
+                // Validate the Terraform files
+                bat 'terraform validate'
+
+                // Plan the deployment
+                bat 'terraform plan'
             }
         }
+    }
+
+
 
         stage('Terraform Plan') {
             steps {
