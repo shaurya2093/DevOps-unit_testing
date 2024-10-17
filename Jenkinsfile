@@ -63,36 +63,43 @@ pipeline {
                 }
             }
         }
-    }
-            stage('Terraform Init') {
+
+        stage('Terraform Init') {
             steps {
-                // Initialize Terraform in the working directory
-                sh 'terraform init'
+                script {
+                    // Initialize Terraform in the working directory
+                    sh 'terraform init'
+                }
             }
         }
 
         stage('Terraform Plan') {
             steps {
-                // Run Terraform plan to show the execution plan
-                sh 'terraform plan -out=plan.out'
+                script {
+                    // Run Terraform plan to show the execution plan
+                    sh 'terraform plan -out=plan.out'
+                }
             }
         }
 
         stage('Terraform Apply') {
             steps {
-                // Apply the Terraform plan
-                sh 'terraform apply -auto-approve plan.out'
+                script {
+                    // Apply the Terraform plan
+                    sh 'terraform apply -auto-approve plan.out'
+                }
             }
         }
 
         stage('Verify Deployment') {
             steps {
-                // Optional: Verify resources like EKS cluster or services deployed properly
-                sh 'kubectl get svc'
+                script {
+                    // Verify resources like EKS cluster or services deployed properly
+                    sh 'kubectl get svc'
+                }
             }
         }
-}
-
+    }
 
     post {
         success {
