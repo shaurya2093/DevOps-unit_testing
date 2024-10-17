@@ -64,37 +64,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    // Deploy the frontend service
-                    bat 'kubectl apply -f frontend-deployment.yaml --validate=false'
-                    bat 'kubectl apply -f frontend-service.yaml'
 
-                    // Deploy the backend service
-                    bat 'kubectl apply -f backend-deployment.yaml'
-                    bat 'kubectl apply -f backend-service.yaml'
-                }
-            }
-        }
-        
-        stage('Get External IPs') {
-            steps {
-                script {
-                    // Wait for a few seconds to let the LoadBalancer provision
-                    sleep 30
-                    
-                    // Get the external IP of the frontend service
-                    def frontendIp = bat(script: "kubectl get services frontend-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'", returnStdout: true).trim()
-                    echo "Frontend Service External IP: ${frontendIp}"
-                    
-                    // Get the external IP of the backend service
-                    def backendIp = bat(script: "kubectl get services backend-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'", returnStdout: true).trim()
-                    echo "Backend Service External IP: ${backendIp}"
-                }
-            }
-        }
-    }
 
     post {
         success {
